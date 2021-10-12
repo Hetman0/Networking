@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace _NS_
+namespace Networking
 {
     abstract class Singleton<T> where T: new()
     {

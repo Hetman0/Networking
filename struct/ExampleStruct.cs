@@ -9,7 +9,7 @@ using System.Reflection;
 using System.IO;
 using System.Threading;
 
-namespace _NS_
+namespace Networking
 {
     public struct ExampleStruct
     {

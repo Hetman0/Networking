@@ -1,4 +1,4 @@
-﻿namespace _NS_
+﻿namespace Networking
 {
     delegate T Example<T>(T input);
 }
