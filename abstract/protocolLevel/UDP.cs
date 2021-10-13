@@ -9,8 +9,8 @@ namespace Networking
     {
         public abstract class UDP : SocketBase
         {
-            HashSet<IAsyncResult> m_sendThreadHandler = new HashSet<IAsyncResult>();
-            HashSet<IAsyncResult> m_receiveThreadHandler = new HashSet<IAsyncResult>();
+            //HashSet<IAsyncResult> m_sendThreadHandler = new HashSet<IAsyncResult>();          //collecting lists of going async calls, no use for it currently
+            //HashSet<IAsyncResult> m_receiveThreadHandler = new HashSet<IAsyncResult>();
 
             public UDP(byte ip0, byte ip1, byte ip2, byte ip3, ushort port, int receiveBuffer, int sendBuffer)
                 : base(ip0, ip1, ip2, ip3, port, SocketType.Dgram, ProtocolType.Udp, receiveBuffer, sendBuffer)
@@ -25,20 +25,19 @@ namespace Networking
                 Array.Copy(data, offset, buffer, 0, size);
                 IAsyncResult result = null;
 
-                result = m_socket.BeginSendTo(buffer, 0, size, SocketFlags.None, target, OnSendCallback, buffer);
-                lock (m_sendThreadHandler)
-                { m_sendThreadHandler.Add(result); }
+                result = m_socket.BeginSendTo(buffer, 0, size, SocketFlags.None, target, OnSendCallback, new KeyValuePair<EndPoint, byte[]>(target, buffer));
+                //lock (m_sendThreadHandler)
+                //{ m_sendThreadHandler.Add(result); }                                          //collecting lists of going async calls, no use for it currently
             }
-            /*public*/
-            void BeginReceive()
+            void BeginReceive()                                                                 //making this public without ability to close going threads is pointless
             {
                 byte[] buffer = m_receiveBuffer.Pop();
                 SocketError err = SocketError.SocketError;
                 IAsyncResult result = null;
 
                 result = m_socket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, out err, OnReceiveCallback, buffer);
-                lock (m_receiveThreadHandler)
-                { m_receiveThreadHandler.Add(result); }
+                //lock (m_receiveThreadHandler)
+                //{ m_receiveThreadHandler.Add(result); }                                       //collecting lists of going async calls, no use for it currently
 
                 switch (err)
                 {
@@ -66,7 +65,7 @@ namespace Networking
             /// </summary>
             /// <param name="data">Send data, WARNING: don't resize</param>
             /// <param name="size">Amount of send data, any additional bytes are random trush and should be ignored</param>
-            protected virtual void OnSendAsync(byte[] data, int size) { }
+            protected virtual void OnSendAsync(EndPoint target, byte[] data, int size) { }
 
             protected virtual void OnReceiveCallback(IAsyncResult result)
             {
@@ -83,7 +82,8 @@ namespace Networking
                 }
                 finally
                 {
-                    lock (m_receiveThreadHandler) m_receiveThreadHandler.Remove(result);
+                    //lock (m_receiveThreadHandler)
+                    //  m_receiveThreadHandler.Remove(result);                                  //collecting lists of going async calls, no use for it currently
                     BeginReceive();
                 }
 
@@ -94,7 +94,9 @@ namespace Networking
             }
             protected virtual void OnSendCallback(IAsyncResult result)
             {
-                byte[] buffer = result.AsyncState as byte[];
+                KeyValuePair<EndPoint, byte[]> status = 
+                    (KeyValuePair<EndPoint, byte[]>)result.AsyncState;
+                byte[] buffer = status.Value;
                 int size;
                 try
                 {
@@ -106,10 +108,13 @@ namespace Networking
                     }
                 }
                 finally
-                { lock (m_sendThreadHandler) m_sendThreadHandler.Remove(result); }
+                {
+                    //lock (m_sendThreadHandler)
+                    //  m_sendThreadHandler.Remove(result);                                     //collecting lists of going async calls, no use for it currently
+                }
 
                 int bufferSize = buffer.Length;
-                OnSendAsync(buffer, size);
+                OnSendAsync(status.Key, buffer, size);
                 if (bufferSize == buffer.Length)
                 { m_sendBuffer.Push(buffer); }
             }
