@@ -10,54 +10,81 @@
 
 !abstract/
 !abstract/*.cs
+!abstract/*/
 !abstract/*/*.cs
+!abstract/*/*/
 !abstract/*/*/*.cs
+!abstract/*/*/*/
 !abstract/*/*/*/*.cs
 
 !attribute/
 !attribute/*.cs
+!attribute/*/
 !attribute/*/*.cs
+!attribute/*/*/
 !attribute/*/*/*.cs
+!attribute/*/*/*/
 !attribute/*/*/*/*.cs
 
 !delegate/
 !delegate/*.cs
+!delegate/*/
 !delegate/*/*.cs
+!delegate/*/*/
 !delegate/*/*/*.cs
+!delegate/*/*/*/
 !delegate/*/*/*/*.cs
 
 !enum/
 !enum/*.cs
+!enum/*/
 !enum/*/*.cs
+!enum/*/*/
 !enum/*/*/*.cs
+!enum/*/*/*/
 !enum/*/*/*/*.cs
 
 !exception/
 !exception/*.cs
+!exception/*/
 !exception/*/*.cs
+!exception/*/*/
 !exception/*/*/*.cs
+!exception/*/*/*/
 !exception/*/*/*/*.cs
 
 !instance/
 !instance/*.cs
+!instance/*/
 !instance/*/*.cs
+!instance/*/*/
 !instance/*/*/*.cs
+!instance/*/*/*/
 !instance/*/*/*/*.cs
 
 !interface/
 !interface/*.cs
+!interface/*/
 !interface/*/*.cs
+!interface/*/*/
 !interface/*/*/*.cs
+!interface/*/*/*/
 !interface/*/*/*/*.cs
 
 !static/
 !static/*.cs
+!static/*/
 !static/*/*.cs
+!static/*/*/
 !static/*/*/*.cs
+!static/*/*/*/
 !static/*/*/*/*.cs
 
 !struct/
 !struct/*.cs
+!struct/*/
 !struct/*/*.cs
+!struct/*/*/
 !struct/*/*/*.cs
+!struct/*/*/*/
 !struct/*/*/*/*.cs
